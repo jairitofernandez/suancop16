@@ -3,10 +3,26 @@
 
 import { useEffect, useState } from 'react';
 import { supabase } from '../../lib/supabaseClient';
+import { User } from '@supabase/supabase-js';
+import Image from 'next/image';
+
+interface Animal {
+  id: number;
+  nombre_comun: string;
+  nombre_cientifico: string;
+  descripcion: string;
+  imagen_url: string;
+  grupo_qr: string;
+}
+
+interface Coleccion {
+  animal_id: number;
+  Animales: Animal[];
+}
 
 export default function PerfilPage() {
-  const [animales, setAnimales] = useState<any[]>([]);
-  const [user, setUser] = useState<any>(null);
+  const [animales, setAnimales] = useState<Animal[]>([]);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -25,7 +41,8 @@ export default function PerfilPage() {
           .eq('usuario_id', user.id);
 
         if (data) {
-          setAnimales(data.map((item: any) => item.Animales));
+          const animalesObtenidos = data.flatMap((item: Coleccion) => item.Animales);
+          setAnimales(animalesObtenidos);
         }
       }
     };
@@ -42,7 +59,13 @@ export default function PerfilPage() {
       {animales.map((animal) => (
         <div key={animal.id} className="mt-4">
           <h2 className="text-xl">{animal.nombre_comun}</h2>
-          <img src={animal.imagen_url} alt={animal.nombre_comun} className="w-48 h-auto" />
+          <Image
+            src={animal.imagen_url}
+            alt={animal.nombre_comun}
+            width={192}
+            height={192}
+            className="w-48 h-auto"
+          />
         </div>
       ))}
     </div>

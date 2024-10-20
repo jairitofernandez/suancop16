@@ -3,18 +3,28 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabaseClient';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { User } from '@supabase/supabase-js';
+import Image from 'next/image';
+
+interface Animal {
+  id: number;
+  nombre_comun: string;
+  nombre_cientifico: string;
+  descripcion: string;
+  imagen_url: string;
+  grupo_qr: string;
+}
 
 export default function GrupoPage() {
-  const router = useRouter();
   const params = useParams();
   const grupo = params.grupo as string;
 
-  const [animal, setAnimal] = useState<any>(null);
+  const [animal, setAnimal] = useState<Animal | null>(null);
   const [nombreUsuario, setNombreUsuario] = useState('');
   const [descripcionPersonalizada, setDescripcionPersonalizada] = useState('');
   const [generando, setGenerando] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     const getUser = async () => {
@@ -56,7 +66,7 @@ export default function GrupoPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           nombreUsuario,
-          nombreAnimal: animal.nombre_comun,
+          nombreAnimal: animal?.nombre_comun,
         }),
       });
 
@@ -69,14 +79,14 @@ export default function GrupoPage() {
           await supabase.from('Colecciones').insert([
             {
               usuario_id: user.id,
-              animal_id: animal.id,
+              animal_id: animal?.id,
             },
           ]);
         }
       } else {
         alert('Error al generar la descripción: ' + data.error);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error en la solicitud:', error);
       alert('Ocurrió un error al generar la descripción.');
     }
@@ -97,7 +107,13 @@ export default function GrupoPage() {
     <div className="p-8">
       <h1 className="text-2xl font-bold">{animal.nombre_comun}</h1>
       <h2 className="italic">{animal.nombre_cientifico}</h2>
-      <img src={animal.imagen_url} alt={animal.nombre_comun} className="w-64 h-auto" />
+      <Image
+        src={animal.imagen_url}
+        alt={animal.nombre_comun}
+        width={256}
+        height={256}
+        className="w-64 h-auto"
+      />
       <p>{animal.descripcion}</p>
 
       <div className="mt-4">
@@ -144,7 +160,10 @@ export default function GrupoPage() {
       {!user && descripcionPersonalizada && (
         <div className="mt-8">
           <p>
-            <strong>¡Regístrate para coleccionar este animal y ver tu colección completa!</strong>
+            <strong>
+              ¡Regístrate para coleccionar este animal y ver tu colección
+              completa!
+            </strong>
           </p>
           <a
             href="/register"

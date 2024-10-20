@@ -15,25 +15,51 @@ export async function GET(request: Request) {
     (
       <div
         style={{
-          width: '600px',
-          height: '800px',
+          width: '720px',
+          height: '1280px',
           display: 'flex',
           flexDirection: 'column',
           backgroundColor: '#fff',
           color: '#000',
-          padding: '20px',
+          fontSize: '32px',
+          fontFamily: 'Arial, sans-serif',
         }}
       >
-        <img src={imagenURL} alt={nombreAnimal} style={{ width: '100%', height: 'auto' }} />
-        <h1>{nombreAnimal}</h1>
-        <h2>{nombreCientifico}</h2>
-        <p>{descripcion}</p>
-        <p>{descripcionPersonalizada}</p>
+        {/* Sección de la imagen del animal */}
+        <div style={{ flex: '1', position: 'relative' }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={imagenURL}
+            alt={nombreAnimal}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          />
+        </div>
+        {/* Sección de texto */}
+        <div style={{ padding: '20px' }}>
+          <h1 style={{ fontSize: '48px', margin: '0' }}>{nombreAnimal}</h1>
+          <h2 style={{ fontSize: '36px', fontStyle: 'italic', margin: '0' }}>
+            {nombreCientifico}
+          </h2>
+          <p style={{ fontSize: '28px', marginTop: '20px' }}>{descripcion}</p>
+          <p
+            style={{
+              fontSize: '28px',
+              marginTop: '20px',
+              fontWeight: 'bold',
+            }}
+          >
+            {descripcionPersonalizada}
+          </p>
+        </div>
       </div>
     ),
     {
-      width: 600,
-      height: 800,
+      width: 720,
+      height: 1280,
     }
   );
 }

@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import OpenAI from 'openai';
 
-export const runtime = 'nodejs'; // Cambiado a 'nodejs'
+export const runtime = 'nodejs';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
@@ -11,7 +11,7 @@ const openai = new OpenAI({
 export async function POST(request: Request) {
   const { nombreUsuario, nombreAnimal } = await request.json();
 
-  const prompt = `Genera una descripción corta y graciosa que compare a ${nombreUsuario} con el animal ${nombreAnimal}, en tono humorístico.`;
+  const prompt = `Genera una descripción corta, graciosa y sarcástica, con pocos signos de puntuación y enfoque en la naturaleza que compare a ${nombreUsuario} con el animal ${nombreAnimal}, en tono humorístico.`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -25,10 +25,17 @@ export async function POST(request: Request) {
       max_tokens: 60,
     });
 
-    const descripcion = completion.choices[0].message?.content.trim();
+    const messageContent = completion.choices[0]?.message?.content;
+
+    if (!messageContent) {
+      throw new Error('No se recibió una respuesta válida del modelo de IA.');
+    }
+
+    const descripcion = messageContent.trim();
     return NextResponse.json({ descripcion });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Error al generar la descripción:', error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

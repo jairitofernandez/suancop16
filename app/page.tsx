@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import Image from 'next/image';
 
 interface Animal {
   id: number;
@@ -12,19 +13,12 @@ interface Animal {
 }
 
 export default function Home() {
-  const [user, setUser] = useState<any>(null);
   const [animales, setAnimales] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [debugInfo, setDebugInfo] = useState<string>('');
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data } = await supabase.auth.getSession();
-      setUser(data?.session?.user ?? null);
-    };
-    getUser();
-
     const fetchAnimales = async () => {
       try {
         setDebugInfo('Intentando obtener animales...\n');
@@ -72,10 +66,11 @@ export default function Home() {
             setDebugInfo(prev => prev + `Resultado de consulta de prueba: ${JSON.stringify(testData)}\n`);
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error('Error al obtener los animales:', error);
-        setError(error.message || 'Ocurrió un error al obtener los animales');
-        setDebugInfo(prev => prev + `Error capturado: ${error.message}\n`);
+        const errorMessage = error instanceof Error ? error.message : 'Ocurrió un error al obtener los animales';
+        setError(errorMessage);
+        setDebugInfo(prev => prev + `Error capturado: ${errorMessage}\n`);
       } finally {
         setLoading(false);
       }
@@ -102,7 +97,13 @@ export default function Home() {
               <h3 className="font-bold">{animal.nombre_comun}</h3>
               <p className="text-sm italic">{animal.nombre_cientifico}</p>
               <p className="mt-2">{animal.descripcion}</p>
-              <img src={animal.imagen_url} alt={animal.nombre_comun} className="mt-2 w-full h-48 object-cover rounded"/>
+              <Image
+                src={animal.imagen_url}
+                alt={animal.nombre_comun}
+                width={500}
+                height={200}
+                className="mt-2 w-full h-48 object-cover rounded"
+              />
               <p className="mt-2">Grupo QR: {animal.grupo_qr}</p>
             </div>
           ))}
