@@ -27,7 +27,7 @@ export default function GrupoPage() {
   useEffect(() => {
     const fetchAnimal = async () => {
       const { data: animales } = await supabase
-        .from('Animales')
+        .from('animales')
         .select('*')
         .eq('grupo_qr', grupo);
 
