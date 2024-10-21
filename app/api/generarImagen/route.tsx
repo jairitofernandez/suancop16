@@ -1,7 +1,6 @@
 // app/api/generarImagen/route.tsx
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
-import { base64Images } from '../../../lib/base64Images';
 
 export const runtime = 'edge';
 
@@ -13,12 +12,13 @@ export async function GET(request: NextRequest) {
   const descripcionPersonalizada = searchParams.get('personalizada') || '';
   const imagenNombre = searchParams.get('imagenNombre') || '';
 
-  // Obtener la imagen en Base64
-  const imagenBase64 = base64Images[imagenNombre];
+  // Definir manualmente la URL base para producción
+  const baseUrl = process.env.NODE_ENV === 'production'
+    ? 'https://suancop16.vercel.app'
+    : 'http://localhost:3000';
 
-  if (!imagenBase64) {
-    return new Response('Imagen no encontrada', { status: 404 });
-  }
+  // URL absoluta de la imagen
+  const imageUrl = `${baseUrl}/images/${imagenNombre}`;
 
   return new ImageResponse(
     (
@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         {/* Sección de la imagen del animal */}
         <div style={{ flex: '1', position: 'relative', display: 'flex' }}>
           <img
-            src={imagenBase64}
+            src={imageUrl}
             alt={nombreAnimal}
             style={{
               width: '100%',
@@ -81,3 +81,4 @@ export async function GET(request: NextRequest) {
     }
   );
 }
+
