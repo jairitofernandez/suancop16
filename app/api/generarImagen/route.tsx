@@ -1,15 +1,24 @@
 // app/api/generarImagen/route.tsx
 import { ImageResponse } from '@vercel/og';
+import { NextRequest } from 'next/server';
+import { base64Images } from '../../../lib/base64Images';
 
 export const runtime = 'edge';
 
-export async function GET(request: Request) {
+export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const nombreAnimal = searchParams.get('animal') || 'Animal';
   const nombreCientifico = searchParams.get('cientifico') || '';
   const descripcion = searchParams.get('descripcion') || '';
   const descripcionPersonalizada = searchParams.get('personalizada') || '';
-  const imagenURL = searchParams.get('imagen') || '';
+  const imagenNombre = searchParams.get('imagenNombre') || '';
+
+  // Obtener la imagen en Base64
+  const imagenBase64 = base64Images[imagenNombre];
+
+  if (!imagenBase64) {
+    return new Response('Imagen no encontrada', { status: 404 });
+  }
 
   return new ImageResponse(
     (
@@ -23,13 +32,16 @@ export async function GET(request: Request) {
           color: '#000',
           fontSize: '32px',
           fontFamily: 'Arial, sans-serif',
+          justifyContent: 'center',
+          alignItems: 'center',
+          padding: '40px',
+          textAlign: 'center',
         }}
       >
         {/* Sección de la imagen del animal */}
-        <div style={{ flex: '1', position: 'relative' }}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
+        <div style={{ flex: '1', position: 'relative', display: 'flex' }}>
           <img
-            src={imagenURL}
+            src={imagenBase64}
             alt={nombreAnimal}
             style={{
               width: '100%',
@@ -39,7 +51,13 @@ export async function GET(request: Request) {
           />
         </div>
         {/* Sección de texto */}
-        <div style={{ padding: '20px' }}>
+        <div
+          style={{
+            padding: '20px',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
           <h1 style={{ fontSize: '48px', margin: '0' }}>{nombreAnimal}</h1>
           <h2 style={{ fontSize: '36px', fontStyle: 'italic', margin: '0' }}>
             {nombreCientifico}

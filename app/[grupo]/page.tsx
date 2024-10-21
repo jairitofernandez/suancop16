@@ -75,11 +75,11 @@ export default function GrupoPage() {
       if (response.ok) {
         setDescripcionPersonalizada(data.descripcion);
 
-        if (user) {
+        if (user && animal) {
           await supabase.from('Colecciones').insert([
             {
               usuario_id: user.id,
-              animal_id: animal?.id,
+              animal_id: animal.id,
             },
           ]);
         }
@@ -93,6 +93,11 @@ export default function GrupoPage() {
 
     setGenerando(false);
   };
+
+  // Función para extraer el nombre de la imagen
+  function getImageFileName(url: string): string {
+    return url.split('/').pop() || '';
+  }
 
   if (!animal) {
     return (
@@ -148,7 +153,9 @@ export default function GrupoPage() {
               animal.descripcion
             )}&personalizada=${encodeURIComponent(
               descripcionPersonalizada
-            )}&imagen=${encodeURIComponent(animal.imagen_url)}`}
+            )}&imagenNombre=${encodeURIComponent(
+              getImageFileName(animal.imagen_url)
+            )}`}
             download="animal.png"
             className="inline-block mt-4 px-4 py-2 bg-green-500 text-white"
           >
