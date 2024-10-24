@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
 
   // Definir manualmente la URL base para producción
   const baseUrl = process.env.NODE_ENV === 'production'
-    ? 'https://suancop16.vercel.app'
+    ? 'https://suancop16-ebon.vercel.app'
     : 'http://localhost:3000';
 
   // URL absoluta de la imagen
