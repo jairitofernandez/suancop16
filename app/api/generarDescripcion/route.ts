@@ -11,7 +11,8 @@ const openai = new OpenAI({
 export async function POST(request: Request) {
   const { nombreUsuario, nombreAnimal } = await request.json();
 
-  const prompt = `Genera una descripción corta, graciosa y sarcástica, con pocos signos de puntuación y enfoque en la naturaleza que compare a ${nombreUsuario} con el animal ${nombreAnimal}, en tono humorístico.`;
+  // Instrucción específica para el rango de caracteres
+  const prompt = `Genera una descripción corta, graciosa y sarcástica, sin género, con pocos signos de puntuación y admiración, que compare a ${nombreUsuario} con el animal ${nombreAnimal}, y que tenga entre 190 y 210 caracteres. No recortes palabras al final.`;
 
   try {
     const completion = await openai.chat.completions.create({
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
           content: prompt,
         },
       ],
-      max_tokens: 60,
+      max_tokens: 100, // Ajustamos los tokens
     });
 
     const messageContent = completion.choices[0]?.message?.content;
@@ -31,8 +32,7 @@ export async function POST(request: Request) {
       throw new Error('No se recibió una respuesta válida del modelo de IA.');
     }
 
-    const descripcion = messageContent.trim();
-    return NextResponse.json({ descripcion });
+    return NextResponse.json({ descripcion: messageContent });
   } catch (error: unknown) {
     console.error('Error al generar la descripción:', error);
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';

@@ -12,8 +12,8 @@ interface Animal {
   nombre_comun: string;
   nombre_cientifico: string;
   descripcion: string;
-  imagen_url: string;
-  grupo_qr: string;
+  url_imagen: string;
+  enlace_qr: string;
 }
 
 export default function GrupoPage() {
@@ -39,7 +39,7 @@ export default function GrupoPage() {
       const { data: animales } = await supabase
         .from('animales')
         .select('*')
-        .eq('grupo_qr', grupo);
+        .eq('enlace_qr', grupo);
 
       if (animales && animales.length > 0) {
         const animalAleatorio =
@@ -113,7 +113,7 @@ export default function GrupoPage() {
       <h1 className="text-2xl font-bold">{animal.nombre_comun}</h1>
       <h2 className="italic">{animal.nombre_cientifico}</h2>
       <Image
-        src={animal.imagen_url}
+        src={animal.url_imagen}
         alt={animal.nombre_comun}
         width={256}
         height={256}
@@ -154,9 +154,9 @@ export default function GrupoPage() {
             )}&personalizada=${encodeURIComponent(
               descripcionPersonalizada
             )}&imagenNombre=${encodeURIComponent(
-              getImageFileName(animal.imagen_url)
+              getImageFileName(animal.url_imagen)
             )}`}
-            download="animal.png"
+            download="cop16suanimage.png"
             className="inline-block mt-4 px-4 py-2 bg-green-500 text-white"
           >
             Descargar Imagen

@@ -8,8 +8,8 @@ interface Animal {
   nombre_comun: string;
   nombre_cientifico: string;
   descripcion: string;
-  imagen_url: string;
-  grupo_qr: string;
+  url_imagen: string;
+  enlace_qr: string;
 }
 
 export default function Home() {
@@ -98,13 +98,13 @@ export default function Home() {
               <p className="text-sm italic">{animal.nombre_cientifico}</p>
               <p className="mt-2">{animal.descripcion}</p>
               <Image
-                src={animal.imagen_url}
+                src={animal.url_imagen}
                 alt={animal.nombre_comun}
                 width={500}
                 height={200}
                 className="mt-2 w-full h-48 object-cover rounded"
               />
-              <p className="mt-2">Grupo QR: {animal.grupo_qr}</p>
+              <p className="mt-2">Grupo QR: {animal.enlace_qr}</p>
             </div>
           ))}
         </div>

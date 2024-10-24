@@ -11,8 +11,8 @@ interface Animal {
   nombre_comun: string;
   nombre_cientifico: string;
   descripcion: string;
-  imagen_url: string;
-  grupo_qr: string;
+  url_imagen: string;
+  enlace_qr: string;
 }
 
 interface Coleccion {
@@ -60,7 +60,7 @@ export default function PerfilPage() {
         <div key={animal.id} className="mt-4">
           <h2 className="text-xl">{animal.nombre_comun}</h2>
           <Image
-            src={animal.imagen_url}
+            src={animal.url_imagen}
             alt={animal.nombre_comun}
             width={192}
             height={192}
