@@ -14,10 +14,10 @@ export async function GET(request: NextRequest) {
   const descripcionPersonalizada = searchParams.get('personalizada') || '';
   const imagenNombre = searchParams.get('imagenNombre') || '';
 
-  const baseUrl =
+  const baseUrl = 
     process.env.NODE_ENV === 'production'
-      ? 'https://suancop16-ebon.vercel.app'
-      : 'http://localhost:3000';
+      ? process.env.URL_VERCEL
+      : process.env.URL_LOCAL;
 
   // Obtener el archivo de la fuente Poppins Bold desde tu servidor
   const poppinsBoldFont = await fetch(
