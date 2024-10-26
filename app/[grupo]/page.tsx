@@ -133,15 +133,15 @@ export default function GrupoPage() {
       }}
     >
       {/* Logo en la parte superior */}
-      <div className="mb-4">
-        <Image src="/template/logo.png" alt="Logo" width={200} height={127} />
+      <div className="mb-1">
+        <Image src="/template/logo.png" alt="Logo" width={150} height={95} />
       </div>
 
       {/* Texto #estoyenCOP16 */}
-      <h2 className="text-3xl font-bold text-[#c1633a] mb-6">#estoyenCOP16</h2>
+      <h2 className="text-3xl font-bold text-[#c1633a] mb-1">#estoyenCOP16</h2>
 
       {/* Contenedor de la imagen con nombres superpuestos */}
-      <div className="relative flex items-center justify-center mt-0">
+      <div className="relative flex items-center justify-center mt-4">
         <div className="rounded-full overflow-hidden w-72 h-72 border-8" style={{ borderColor: '#e4e7d5' }}>
           <Image
             src={animal.url_imagen}
@@ -167,7 +167,7 @@ export default function GrupoPage() {
       {descripcionPersonalizada && (
         <div className="mt-6 w-80 bg-white p-4 rounded text-center shadow">
           <h3 className="font-semibold text-[#5c8739]">Descripción Personalizada:</h3>
-          <p className="mt-2">{descripcionPersonalizada}</p>
+          <p className="mt-2 text-[#2d5528]">{descripcionPersonalizada}</p>
           
           <a
             href={`/api/generarImagen?usuario=${encodeURIComponent(
@@ -193,7 +193,7 @@ export default function GrupoPage() {
           value={nombreUsuario}
           onChange={(e) => setNombreUsuario(e.target.value)}
           onKeyDown={handleKeyPress}
-          className="p-3 border border-gray-300 rounded w-80 text-center"
+          className="p-3 text-[#5c8739] border border-gray-300 rounded w-80 text-center"
         />
         
         <button
@@ -227,14 +227,14 @@ export default function GrupoPage() {
               ✕
             </button>
             <h3 className="text-xl font-semibold text-[#5c8739]">¡Hola!</h3>
-            <p className="mt-2">Ingresa tu nombre para una experiencia personalizada.</p>
+            <p className="mt-2 text-[#2d5528]">Ingresa tu nombre para una experiencia personalizada.</p>
             <input
               type="text"
               placeholder="Tu Nombre"
               value={nombreUsuario}
               onChange={(e) => setNombreUsuario(e.target.value)}
               onKeyDown={handleKeyPress}
-              className="mt-4 p-3 border border-gray-300 rounded w-full text-center"
+              className="mt-4 p-3 text-[#2d5528] border border-gray-300 rounded w-full text-center"
             />
             <button
               onClick={generarDescripcion}
