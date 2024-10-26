@@ -27,7 +27,6 @@ export default function GrupoPage() {
   const [generando, setGenerando] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [mostrarPopup, setMostrarPopup] = useState(false);
-  const [imagenGenerada, setImagenGenerada] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
