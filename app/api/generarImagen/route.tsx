@@ -6,7 +6,6 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
-// Función para capitalizar cada palabra
 function capitalizeWords(text: string): string {
   return text
     .toLowerCase()
@@ -37,13 +36,11 @@ function calculateAnimalNameFontSize(text: string): number {
 }
 
 function calculateScientificNameFontSize(text: string): number {
-  // Reducimos el tamaño base y el ancho aproximado por carácter en 2 puntos
   return calculateDynamicFontSize(text, 20, 250, 11);
 }
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  // Aplicamos capitalización a cada palabra
   const nombreUsuario = capitalizeWords(searchParams.get('usuario') || '');
   const nombreAnimal = searchParams.get('animal') || 'Animal';
   const nombreCientifico = searchParams.get('cientifico') || '';
@@ -54,7 +51,6 @@ export async function GET(request: NextRequest) {
   const usernameFontSize = calculateUsernameFontSize(nombreUsuario);
   const animalNameFontSize = calculateAnimalNameFontSize(nombreAnimal);
   const scientificNameFontSize = calculateScientificNameFontSize(nombreCientifico);
-
   const baseUrl =
     process.env.NODE_ENV === 'production'
       ? process.env.URL_VERCEL
@@ -121,18 +117,31 @@ export async function GET(request: NextRequest) {
               <h1
                 style={{
                   fontSize: `${usernameFontSize}px`,
-                  marginTop: '67px',
+                  marginTop: '80px',
                   marginBottom: '5px',
                   fontFamily: 'Poppins',
-                  color: '#5c8739',
-                  lineHeight: '0.7', // Reducimos el alto de línea
+                  color: '#72c42f',
+                  lineHeight: '0.9',
                 }}
               >
                 {nombreUsuario}
               </h1>
 
+              {/* Hashtag COP16 */}
+              <div
+                style={{
+                  fontSize: '32px',
+                  fontFamily: 'Poppins',
+                  color: '#c1633a',
+                  marginTop: '8px',
+                  marginBottom: '15px',
+                }}
+              >
+                #estoyenCOP16
+              </div>
+
               {/* Contenedor para el nombre del animal */}
-              <div style={{ display: 'flex', marginTop: '55px', marginBottom: '5px' }}>
+              <div style={{ display: 'flex', marginTop: '25px', marginBottom: '5px' }}>
                 <div
                   style={{
                     display: 'flex',
