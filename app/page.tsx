@@ -1,5 +1,8 @@
+// app/page.tsx
 'use client';
+
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { supabase } from '../lib/supabaseClient';
 import Image from 'next/image';
 
@@ -13,10 +16,16 @@ interface Animal {
 }
 
 export default function Home() {
+  const router = useRouter();
   const [animales, setAnimales] = useState<Animal[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>('');
+  const [debugInfo, setDebugInfo] = useState('');
+
+  useEffect(() => {
+    // Redirigir automáticamente a la página /WYXOP
+    router.push('/WYXOP');
+  }, [router]);
 
   useEffect(() => {
     const fetchAnimales = async () => {
