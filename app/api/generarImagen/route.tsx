@@ -8,7 +8,9 @@ export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const nombreUsuario = searchParams.get('usuario') || '';
+  const nombreUsuario = (searchParams.get('usuario') || '')
+    .toLowerCase()
+    .replace(/^\w/, (c) => c.toUpperCase());
   const nombreAnimal = searchParams.get('animal') || 'Animal';
   const nombreCientifico = searchParams.get('cientifico') || '';
   const descripcion = searchParams.get('descripcion') || '';
