@@ -239,6 +239,21 @@ export async function GET(request: NextRequest) {
               {descripcionPersonalizada}
             </p>
           </div>
+
+          {/* Fecha fija en la esquina inferior izquierda */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '100px',
+              left: '35px',
+              fontSize: '30px',
+              fontFamily: 'Poppins',
+              color: '#ffffff',
+              fontWeight: 'bold',
+            }}
+          >
+            Oct 2024
+          </div>
         </div>
       </div>
     ),
