@@ -6,16 +6,54 @@ import { NextRequest } from 'next/server';
 
 export const runtime = 'edge';
 
+// Función para capitalizar cada palabra
+function capitalizeWords(text: string): string {
+  return text
+    .toLowerCase()
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function calculateDynamicFontSize(text: string, baseSize: number, maxWidth: number, approxCharWidth: number): number {
+  const textLength = text.length;
+  const estimatedWidth = textLength * approxCharWidth;
+  
+  if (estimatedWidth <= maxWidth) {
+    return baseSize;
+  }
+  
+  const scaleFactor = maxWidth / estimatedWidth;
+  const minSize = Math.floor(baseSize * 0.6);
+  return Math.max(minSize, Math.floor(baseSize * scaleFactor));
+}
+
+function calculateUsernameFontSize(text: string): number {
+  return calculateDynamicFontSize(text, 45, 300, 25);
+}
+
+function calculateAnimalNameFontSize(text: string): number {
+  return calculateDynamicFontSize(text, 35, 250, 20);
+}
+
+function calculateScientificNameFontSize(text: string): number {
+  // Reducimos el tamaño base y el ancho aproximado por carácter en 2 puntos
+  return calculateDynamicFontSize(text, 20, 250, 11);
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
-  const nombreUsuario = (searchParams.get('usuario') || '')
-    .toLowerCase()
-    .replace(/^\w/, (c) => c.toUpperCase());
+  // Aplicamos capitalización a cada palabra
+  const nombreUsuario = capitalizeWords(searchParams.get('usuario') || '');
   const nombreAnimal = searchParams.get('animal') || 'Animal';
   const nombreCientifico = searchParams.get('cientifico') || '';
   const descripcion = searchParams.get('descripcion') || '';
   const descripcionPersonalizada = searchParams.get('personalizada') || '';
   const imagenNombre = searchParams.get('imagenNombre') || '';
+
+  const usernameFontSize = calculateUsernameFontSize(nombreUsuario);
+  const animalNameFontSize = calculateAnimalNameFontSize(nombreAnimal);
+  const scientificNameFontSize = calculateScientificNameFontSize(nombreCientifico);
 
   const baseUrl =
     process.env.NODE_ENV === 'production'
@@ -82,11 +120,12 @@ export async function GET(request: NextRequest) {
             >
               <h1
                 style={{
-                  fontSize: '45px',
+                  fontSize: `${usernameFontSize}px`,
                   marginTop: '67px',
                   marginBottom: '5px',
                   fontFamily: 'Poppins',
                   color: '#5c8739',
+                  lineHeight: '0.7', // Reducimos el alto de línea
                 }}
               >
                 {nombreUsuario}
@@ -104,7 +143,7 @@ export async function GET(request: NextRequest) {
                 >
                   <div
                     style={{
-                      fontSize: '35px',
+                      fontSize: `${animalNameFontSize}px`,
                       fontFamily: 'Poppins',
                       color: '#E4E7D5',
                       WebkitTextStroke: '1px #FFFFFF',
@@ -127,7 +166,7 @@ export async function GET(request: NextRequest) {
                 >
                   <div
                     style={{
-                      fontSize: '22px',
+                      fontSize: `${scientificNameFontSize}px`,
                       fontFamily: 'Poppins',
                       color: '#E4E7D5',
                       WebkitTextStroke: '1px #FFFFFF',
