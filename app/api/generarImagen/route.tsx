@@ -3,6 +3,7 @@
 
 import { ImageResponse } from '@vercel/og';
 import { NextRequest } from 'next/server';
+import { supabase } from '../../../lib/supabaseClient';
 
 export const runtime = 'edge';
 
@@ -17,11 +18,11 @@ function capitalizeWords(text: string): string {
 function calculateDynamicFontSize(text: string, baseSize: number, maxWidth: number, approxCharWidth: number): number {
   const textLength = text.length;
   const estimatedWidth = textLength * approxCharWidth;
-  
+
   if (estimatedWidth <= maxWidth) {
     return baseSize;
   }
-  
+
   const scaleFactor = maxWidth / estimatedWidth;
   const minSize = Math.floor(baseSize * 0.6);
   return Math.max(minSize, Math.floor(baseSize * scaleFactor));
@@ -62,6 +63,13 @@ export async function GET(request: NextRequest) {
 
   const imageUrl = `${baseUrl}/images/${imagenNombre}`;
   const templateUrl = `${baseUrl}/template/template.jpg`;
+
+  // Una vez generada la imagen, actualizamos el registro en `registro_consultas`
+  await supabase
+    .from('registro_consultas')
+    .update({ imagen_generada: true })
+    .eq('nombre_persona', nombreUsuario)
+    .eq('nombre_animal', nombreAnimal);
 
   return new ImageResponse(
     (
