@@ -6,6 +6,7 @@ import { supabase } from '../../lib/supabaseClient';
 import { useParams } from 'next/navigation';
 import { User } from '@supabase/supabase-js';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface Animal {
   id: number;
@@ -25,6 +26,7 @@ export default function GrupoPage() {
   const [descripcionPersonalizada, setDescripcionPersonalizada] = useState('');
   const [generando, setGenerando] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [mostrarPopup, setMostrarPopup] = useState(false);
 
   useEffect(() => {
     const getUser = async () => {
@@ -52,13 +54,16 @@ export default function GrupoPage() {
     fetchAnimal();
   }, [grupo]);
 
+  useEffect(() => {
+    setTimeout(() => setMostrarPopup(true), 2000);
+  }, []);
+
   const generarDescripcion = async () => {
     if (!nombreUsuario) {
       alert('Por favor, ingresa tu nombre.');
       return;
     }
 
-    // Convertir a Capital Case
     const nombreFormateado = nombreUsuario
       .toLowerCase()
       .replace(/\b\w/g, (l) => l.toUpperCase());
@@ -97,58 +102,73 @@ export default function GrupoPage() {
     }
 
     setGenerando(false);
+    setMostrarPopup(false);
   };
 
-  // Función para extraer el nombre de la imagen
-  function getImageFileName(url: string): string {
-    return url.split('/').pop() || '';
-  }
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      generarDescripcion();
+    }
+  };
 
   if (!animal) {
     return (
-      <div className="p-8">
-        <h1>Error</h1>
-        <p>No se pudo encontrar un animal para el grupo especificado.</p>
+      <div className="flex items-center justify-center h-screen bg-[#5c8739] text-white text-center font-bold text-2xl">
+        <p>Buscando una de las especies importante para la COP16...</p>
+        <span className="ml-4 animate-spin border-t-2 border-white rounded-full w-6 h-6"></span>
       </div>
     );
   }
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold">{animal.nombre_comun}</h1>
-      <h2 className="italic">{animal.nombre_cientifico}</h2>
-      <Image
-        src={animal.url_imagen}
-        alt={animal.nombre_comun}
-        width={256}
-        height={256}
-        className="w-64 h-auto"
-      />
-      <p>{animal.descripcion}</p>
-
-      <div className="mt-4">
-        <input
-          type="text"
-          placeholder="Tu Nombre"
-          value={nombreUsuario}
-          onChange={(e) => setNombreUsuario(e.target.value)}
-          className="p-2 border border-gray-300"
-        />
-        <br />
-        <button
-          onClick={generarDescripcion}
-          disabled={generando}
-          className="mt-2 px-4 py-2 bg-blue-500 text-white"
-        >
-          {generando ? 'Generando...' : 'Generar Descripción Personalizada'}
-        </button>
+    <div
+      className="relative flex flex-col items-center min-h-screen p-8"
+      style={{
+        backgroundImage: 'url("/template/fondo.png")',
+        backgroundRepeat: 'repeat-x',
+        backgroundSize: 'auto 100px',
+        backgroundPosition: 'bottom',
+        backgroundColor: '#c4d2c2',
+        fontFamily: 'Poppins, sans-serif',
+      }}
+    >
+      {/* Logo en la parte superior */}
+      <div className="mb-4">
+        <Image src="/template/logo.png" alt="Logo" width={200} height={127} />
       </div>
 
-      {descripcionPersonalizada && (
-        <div className="mt-6">
-          <h3 className="font-semibold">Descripción Personalizada:</h3>
-          <p>{descripcionPersonalizada}</p>
+      {/* Texto #estoyenCOP16 */}
+      <h2 className="text-3xl font-bold text-[#c1633a] mb-6">#estoyenCOP16</h2>
 
+      {/* Contenedor de la imagen con nombres superpuestos */}
+      <div className="relative flex items-center justify-center mt-0">
+        <div className="rounded-full overflow-hidden w-72 h-72 border-8" style={{ borderColor: '#e4e7d5' }}>
+          <Image
+            src={animal.url_imagen}
+            alt={animal.nombre_comun}
+            width={288}
+            height={288}
+            className="object-cover w-full h-full"
+          />
+        </div>
+
+        {/* Nombre del animal superpuesto, sin espacio vertical */}
+        <div className="absolute -bottom-14 flex flex-col items-center w-full text-center space-y-0">
+          <h1 className="text-2xl font-bold text-white bg-[#c1633a] bg-opacity-90 px-4 py-1 rounded-full">{animal.nombre_comun}</h1>
+          <div className="bg-[#172b13] text-[#E4E7D5] italic px-4 py-1 mt-1 rounded-full text-sm">
+            {animal.nombre_cientifico}
+          </div>
+        </div>
+      </div>
+
+      <p className="text-lg mt-16 text-center px-6 text-white">{animal.descripcion}</p>
+
+      {/* Descripción personalizada */}
+      {descripcionPersonalizada && (
+        <div className="mt-6 w-80 bg-white p-4 rounded text-center shadow">
+          <h3 className="font-semibold text-[#5c8739]">Descripción Personalizada:</h3>
+          <p className="mt-2">{descripcionPersonalizada}</p>
+          
           <a
             href={`/api/generarImagen?usuario=${encodeURIComponent(
               nombreUsuario
@@ -156,29 +176,74 @@ export default function GrupoPage() {
               animal.nombre_cientifico
             )}&descripcion=${encodeURIComponent(animal.descripcion)}&personalizada=${encodeURIComponent(
               descripcionPersonalizada
-            )}&imagenNombre=${encodeURIComponent(getImageFileName(animal.url_imagen))}`}
+            )}&imagenNombre=${encodeURIComponent(animal.url_imagen.split('/').pop() || '')}`}
             download="cop16suanimage.png"
-            className="inline-block mt-4 px-4 py-2 bg-green-500 text-white"
+            className="inline-block mt-4 px-4 py-2 bg-[#c1633a] text-white rounded"
           >
-            Descargar Imagen
+            Descargar Imagen para compartir
           </a>
         </div>
       )}
 
+      {/* Input y botón debajo de la descripción personalizada */}
+      <div className="mt-6 w-full flex flex-col items-center">
+        <input
+          type="text"
+          placeholder="Escribe tu nombre para buscar tu match ecológico personalizado"
+          value={nombreUsuario}
+          onChange={(e) => setNombreUsuario(e.target.value)}
+          onKeyDown={handleKeyPress}
+          className="p-3 border border-gray-300 rounded w-80 text-center"
+        />
+        
+        <button
+          onClick={generarDescripcion}
+          disabled={generando}
+          className="mt-4 px-6 py-3 bg-[#c1633a] text-white rounded"
+        >
+          {generando ? 'Buscando...' : '¡Buscar mi match ecológico!'}
+        </button>
+      </div>
+
       {!user && descripcionPersonalizada && (
-        <div className="mt-8">
-          <p>
-            <strong>
-              ¡Regístrate para coleccionar este animal y ver tu colección
-              completa!
-            </strong>
+        <div className="mt-8 text-center">
+          <p className="font-bold text-[#c1633a]">
+            ¡Regístrate para coleccionar este animal y ver tu colección completa!
           </p>
-          <a
-            href="/register"
-            className="px-4 py-2 bg-indigo-500 text-white"
-          >
+          <Link href="/register" className="px-6 py-3 bg-[#c1633a] text-white rounded mt-2 inline-block">
             Registrarse
-          </a>
+          </Link>
+        </div>
+      )}
+
+      {/* Popup para nombre de usuario */}
+      {mostrarPopup && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+          <div className="bg-white p-8 rounded shadow-lg text-center w-80 relative">
+            <button
+              onClick={() => setMostrarPopup(false)}
+              className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-lg"
+            >
+              ✕
+            </button>
+            <h3 className="text-xl font-semibold text-[#5c8739]">¡Hola!</h3>
+            <p className="mt-2">Ingresa tu nombre para una experiencia personalizada.</p>
+            <input
+              type="text"
+              placeholder="Tu Nombre"
+              value={nombreUsuario}
+              onChange={(e) => setNombreUsuario(e.target.value)}
+              onKeyDown={handleKeyPress}
+              className="mt-4 p-3 border border-gray-300 rounded w-full text-center"
+            />
+            <button
+              onClick={generarDescripcion}
+              disabled={generando}
+              className="mt-4 px-6 py-3 bg-[#c1633a] text-white rounded"
+            >
+              {generando ? 'Generando...' : 'Empezar'}
+            </button>
+          </div>
         </div>
       )}
     </div>
