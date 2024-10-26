@@ -58,6 +58,11 @@ export default function GrupoPage() {
       return;
     }
 
+    // Convertir a Capital Case
+    const nombreFormateado = nombreUsuario
+      .toLowerCase()
+      .replace(/\b\w/g, (l) => l.toUpperCase());
+
     setGenerando(true);
 
     try {
@@ -65,7 +70,7 @@ export default function GrupoPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          nombreUsuario,
+          nombreUsuario: nombreFormateado,
           nombreAnimal: animal?.nombre_comun,
         }),
       });
@@ -145,17 +150,13 @@ export default function GrupoPage() {
           <p>{descripcionPersonalizada}</p>
 
           <a
-            href={`/api/generarImagen?animal=${encodeURIComponent(
-              animal.nombre_comun
-            )}&cientifico=${encodeURIComponent(
+            href={`/api/generarImagen?usuario=${encodeURIComponent(
+              nombreUsuario
+            )}&animal=${encodeURIComponent(animal.nombre_comun)}&cientifico=${encodeURIComponent(
               animal.nombre_cientifico
-            )}&descripcion=${encodeURIComponent(
-              animal.descripcion
-            )}&personalizada=${encodeURIComponent(
+            )}&descripcion=${encodeURIComponent(animal.descripcion)}&personalizada=${encodeURIComponent(
               descripcionPersonalizada
-            )}&imagenNombre=${encodeURIComponent(
-              getImageFileName(animal.url_imagen)
-            )}`}
+            )}&imagenNombre=${encodeURIComponent(getImageFileName(animal.url_imagen))}`}
             download="cop16suanimage.png"
             className="inline-block mt-4 px-4 py-2 bg-green-500 text-white"
           >

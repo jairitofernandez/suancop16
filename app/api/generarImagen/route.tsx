@@ -8,13 +8,14 @@ export const runtime = 'edge';
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
+  const nombreUsuario = searchParams.get('usuario') || '';
   const nombreAnimal = searchParams.get('animal') || 'Animal';
   const nombreCientifico = searchParams.get('cientifico') || '';
   const descripcion = searchParams.get('descripcion') || '';
   const descripcionPersonalizada = searchParams.get('personalizada') || '';
   const imagenNombre = searchParams.get('imagenNombre') || '';
 
-  const baseUrl = 
+  const baseUrl =
     process.env.NODE_ENV === 'production'
       ? process.env.URL_VERCEL
       : process.env.URL_LOCAL;
@@ -82,10 +83,20 @@ export async function GET(request: NextRequest) {
                 flexDirection: 'column',
               }}
             >
+              {/* Mostrar nombreUsuario antes del nombre del animal */}
+              <h1
+                style={{
+                  fontSize: '40px',
+                  marginTop: '0px',
+                  marginBottom: '5px',
+                  fontFamily: 'Poppins',
+                }}
+              >
+                {nombreUsuario}
+              </h1>
               <h1
                 style={{
                   fontSize: '46px',
-                  marginTop: '30px',
                   marginBottom: '10px',
                   fontFamily: 'Poppins',
                 }}
