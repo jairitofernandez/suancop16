@@ -14,6 +14,7 @@ interface Animal {
   nombre_cientifico: string;
   descripcion: string;
   url_imagen: string;
+  url_instagram: string;
   enlace_qr: string;
 }
 
@@ -169,10 +170,22 @@ export default function GrupoPage() {
           <div className="bg-[#172b13] text-[#E4E7D5] italic px-4 py-1 mt-1 rounded-full text-sm">
             {animal.nombre_cientifico}
           </div>
+          <div className="text-[#172b13] italic px-4 py-1 mt-1  text-sm">
+          Fotografía por:&nbsp; 
+            <a
+              href={animal.url_instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[#c1633a] underline mt-1"
+            >
+              Paola Marina Sánchez
+            </a>
+          </div>
+
         </div>
       </div>
 
-      <p className="text-lg mt-16 text-center px-6 text-white">{animal.descripcion}</p>
+      <p className="text-lg text-[#172b13] mt-16 text-center px-6 text-white">{animal.descripcion}</p>
 
       {/* Descripción personalizada */}
       {descripcionPersonalizada && (
