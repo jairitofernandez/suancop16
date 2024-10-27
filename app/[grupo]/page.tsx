@@ -185,7 +185,7 @@ export default function GrupoPage() {
         </div>
       </div>
 
-      <p className="text-lg text-[#172b13] mt-16 text-center px-6 text-white">{animal.descripcion}</p>
+      <p className="text-lg text-[#172b13] mt-16 text-center px-6">{animal.descripcion}</p>
 
       {/* Descripción personalizada */}
       {descripcionPersonalizada && (
