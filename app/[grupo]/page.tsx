@@ -193,6 +193,24 @@ export default function GrupoPage() {
           <h3 className="font-semibold text-[#5c8739]">Descripción Personalizada:</h3>
           <p className="mt-2 text-[#2d5528]">{descripcionPersonalizada}</p>
           
+          {/* Vista previa de la imagen generada en tamaño completo */}
+          <div className="flex justify-center items-center mt-0">
+            <Image
+              src={`/api/generarImagen?usuario=${encodeURIComponent(
+                nombreUsuario
+              )}&animal=${encodeURIComponent(animal.nombre_comun)}&cientifico=${encodeURIComponent(
+                animal.nombre_cientifico
+              )}&descripcion=${encodeURIComponent(animal.descripcion)}&personalizada=${encodeURIComponent(
+                descripcionPersonalizada
+              )}&imagenNombre=${encodeURIComponent(animal.url_imagen.split('/').pop() || '')}`}
+              alt="Vista previa de la imagen generada"
+              width={576}
+              height={1024}
+              layout="responsive" // Permite que la imagen mantenga la proporción original
+              className="object-contain max-w-full"
+            />
+          </div>
+
           <a
             href={`/api/generarImagen?usuario=${encodeURIComponent(
               nombreUsuario
@@ -202,12 +220,13 @@ export default function GrupoPage() {
               descripcionPersonalizada
             )}&imagenNombre=${encodeURIComponent(animal.url_imagen.split('/').pop() || '')}`}
             download="cop16suanimage.png"
-            className="inline-block mt-4 px-4 py-2 bg-[#c1633a] text-white rounded"
+            className="inline-block mt-3 px-4 py-2 bg-[#c1633a] text-white rounded"
           >
-            Descargar Imagen para compartir
+            Descargar Imagen para compartir 
           </a>
         </div>
       )}
+
 
       {/* Input y botón debajo de la descripción personalizada */}
       <div className="mt-6 w-full flex flex-col items-center">
