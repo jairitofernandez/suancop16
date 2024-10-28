@@ -232,7 +232,8 @@ export async function GET(request: NextRequest) {
               color: '#2d5528',
             }}
           >
-            <p style={{ fontSize: '26px', margin: '0', fontFamily: 'Poppins' }}>
+            <p style={{ fontSize: '26px', margin: '0', fontFamily: 'Poppins', textShadow: '1px 1px 0 #FFFFFF, -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF' }}>
+
               {descripcion}
             </p>
 
@@ -242,6 +243,7 @@ export async function GET(request: NextRequest) {
                 fontWeight: 'bold',
                 marginTop: '20px',
                 fontFamily: 'Poppins',
+                textShadow: '1px 1px 0 #FFFFFF, -1px -1px 0 #FFFFFF, 1px -1px 0 #FFFFFF, -1px 1px 0 #FFFFFF'
               }}
             >
               {descripcionPersonalizada}
